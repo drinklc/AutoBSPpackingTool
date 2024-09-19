@@ -36,6 +36,28 @@ namespace AutoBSPpackingTool
 			//cmd = args.Select((item, index) => new {item, index}).Any(item => item.index < args.Length - 1 && ((new HashSet<string>(StringComparer.OrdinalIgnoreCase){"--vmf", "-vmf"}.Contains(item.item) && IsFullPath(args[item.index + 1]) && Path.GetExtension(args[item.index + 1]).EqualsCI(".vmf")) || (new HashSet<string>(StringComparer.OrdinalIgnoreCase){"--bsp", "-bsp"}.Contains(item.item) && IsFullPath(args[item.index + 1]) && Path.GetExtension(args[item.index + 1]).EqualsCI(".bsp"))));
 			cmd = args.Any(item => new HashSet<string>(StringComparer.OrdinalIgnoreCase){"--vmf", "-vmf", "--bsp", "-bsp"}.Contains(item));
 			if(!cmd)InitializeComponent();
+			else
+            {
+				components = new System.ComponentModel.Container();
+				System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+				Icon = (Icon)resources.GetObject("$this.Icon");
+				Text = "AutoBSPpackingTool";
+            }
+            {
+				notifyIcon = new NotifyIcon(components)
+				{
+					Text = Text,
+					Icon = Icon,
+					Visible = true
+				};
+				void RestoreFocus()
+				{
+					PostMessage(Handle, WM_SYSCOMMAND, SC_RESTORE, 0);
+					SetForegroundWindow(Handle);
+				}
+				notifyIcon.BalloonTipClicked += (sender, e) => RestoreFocus();
+				notifyIcon.Click += (sender, e) => {if(!cmd)RestoreFocus();};
+            }
 			Visible = !cmd;
 			VoidLoad();
 			DetectSteamDirectory();
@@ -478,8 +500,9 @@ namespace AutoBSPpackingTool
 		string VMF_model_keys_pattern = @"^("+string.Join(@"|", Constants.VMF_model_keys.Select(item => item.Key))+@")$";
 		string script_master_pattern;
 		//misc
-		UpdateCfgOption update_cfgs = UpdateCfgOption.Ask;
 		string developer_link = "https://github.com/drinklc";
+		UpdateCfgOption update_cfgs = UpdateCfgOption.Ask;
+		NotifyIcon notifyIcon;
 
 
 		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -678,24 +701,9 @@ namespace AutoBSPpackingTool
 			OpenSettings();
 		}
 
-		private void notifyIcon1_BalloonTipClosed(object sender, EventArgs e)
+		void Notify(string title, string text, int time = 1000, ToolTipIcon tool_tip_icon = ToolTipIcon.Info)
 		{
-			notifyIcon1.Visible = false;
-		}
-
-		private void notifyIcon1_BalloonTipClicked(object sender, EventArgs e)
-		{
-			PostMessage(Handle, WM_SYSCOMMAND, SC_RESTORE, 0);
-			SetForegroundWindow(Handle);
-		}
-
-		void Notify(string title, string text, int time = 1000)
-		{
-			notifyIcon1.BalloonTipTitle = title;
-			notifyIcon1.BalloonTipText = text;
-			notifyIcon1.Icon = Icon;
-			notifyIcon1.Visible = true;
-			notifyIcon1.ShowBalloonTip(time);
+			notifyIcon.ShowBalloonTip(time, title, text, tool_tip_icon);
 		}
 
 		void CheckMainButtonEnabled()
