@@ -649,8 +649,7 @@ namespace AutoBSPpackingTool
 		{
 			path = PathCombine(path);
 			input_vmf = path;
-			string filename = Path.GetFileNameWithoutExtension(path);
-			vmf_name = filename;
+			vmf_name = Path.GetFileNameWithoutExtension(path);
 			label2.Text = ShortenFileName(Path.GetFileName(path), 30);
 			int panel_x = Round((ClientSize.Width - (button1.Size.Width + 4 + label2.Size.Width)) / 2f);
 			button1.Location = new Point(panel_x, button1.Location.Y);
@@ -673,7 +672,6 @@ namespace AutoBSPpackingTool
 		{
 			path = PathCombine(path);
 			input_bsp = path;
-			string filename = Path.GetFileNameWithoutExtension(path);
 			label4.Text = ShortenFileName(Path.GetFileName(path), 30);
 			int panel_x = Round((ClientSize.Width - (button2.Size.Width + 4 + label4.Size.Width)) / 2f);
 			button2.Location = new Point(panel_x, button2.Location.Y);
@@ -1010,8 +1008,8 @@ namespace AutoBSPpackingTool
 
 		void DetectSearchPaths()
 		{
-			string current_gameinfo_path = gameinfo_path == null ? PathCombine(library_path, "steamapps/common", games_info[game].game_folder, games_info[game].game_root_folder, "gameinfo.txt") : gameinfo_path;
-			string current_mount_cfg_path = mount_cfg_path == null ? PathCombine(library_path, "steamapps/common", games_info[game].game_folder, games_info[game].game_root_folder, "cfg", "mount.cfg") : mount_cfg_path;
+			string current_gameinfo_path = gameinfo_path ?? PathCombine(library_path, "steamapps/common", games_info[game].game_folder, games_info[game].game_root_folder, "gameinfo.txt");
+			string current_mount_cfg_path = mount_cfg_path ?? PathCombine(library_path, "steamapps/common", games_info[game].game_folder, games_info[game].game_root_folder, "cfg", "mount.cfg");
 			if(!File.Exists(current_gameinfo_path))
 			{
 				Log(gameinfo_path == null ? "Could not find gameinfo.txt file" : "The specified gameinfo.txt file doesn't exist", LogType.Warning);

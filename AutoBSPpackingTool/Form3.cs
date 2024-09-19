@@ -67,7 +67,7 @@ namespace AutoBSPpackingTool
 
 		private void Form3_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if(ActiveControl is TextBox textbox)
+			if(ActiveControl is TextBox)
 			{
 				ActiveControl = null;
 			}
@@ -650,7 +650,7 @@ namespace AutoBSPpackingTool
 
 		private void listBox2_DragDrop(object sender, DragEventArgs e)
 		{
-			if(ActiveControl is TextBox textbox)
+			if(ActiveControl is TextBox)
 			{
 				ActiveControl = null;
 			}

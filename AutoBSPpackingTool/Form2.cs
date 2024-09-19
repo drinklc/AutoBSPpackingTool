@@ -52,7 +52,7 @@ namespace AutoBSPpackingTool
 
 		private void Form2_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if(ActiveControl is TextBox textbox)
+			if(ActiveControl is TextBox)
 			{
 				ActiveControl = null;
 			}
